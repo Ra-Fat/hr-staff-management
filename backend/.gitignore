@@ -1,0 +1,45 @@
+# Python
+__pycache__/
+**/__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.pyc
+*.egg-info/
+*.eggs/
+*.env
+.env
+.env.*
+
+# IDEs and editors
+.vscode/
+.idea/
+*.swp
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Docker
+*.log
+# docker-compose.override.yml
+
+# Traefik certificates (if used)
+acme.json
+
+# Pytest cache
+.pytest_cache/
+
+# Migrations (if applicable)
+# migrations/
+
+# Coverage reports
+htmlcov/
+.coverage
+.coverage.*
+
+# Build files
+dist/
+build/
+*.egg
+pip-wheel-metadata/
