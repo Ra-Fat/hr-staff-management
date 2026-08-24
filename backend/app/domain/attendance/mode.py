@@ -1,0 +1,30 @@
+from datetime import date, datetime, timezone
+
+from sqlalchemy import Column, Date, DateTime, ForeignKey, Index, Integer, text
+from sqlalchemy.dialects.postgresql import UUID
+from sqlalchemy.orm import relationship
+from sqlalchemy.sql import func
+from app.core.util import generate_uuid
+
+
+from app.core.database import Base
+
+
+class Attendance(Base):
+    __tablename__ = "attendance"
+
+    id = Column(Integer, primary_key=True, index=True)
+    uuid = Column(UUID(as_uuid=True), default=generate_uuid, primary_key=True, index=True)
+    
+    staff_id = Column(Integer, ForeignKey("staff.id", ondelete="CASCADE"), nullable=False)
+    check_in = Column(DateTime(timezone=True), nullable=True)
+    check_out = Column(DateTime(timezone=True), nullable=True)
+    date = Column(Date, nullable=False)
+
+    staff = relationship("Staff", back_populates="attendance_records", lazy="selectin")
+
+    __table_args__ = (
+        Index("idx_attendance_staff_id", "staff_id"),
+        Index("idx_attendance_date", "date"),
+        Index("idx_attendance_staff_date", "staff_id", "date", unique=True),
+    )

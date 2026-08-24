@@ -13,6 +13,29 @@ class StatusCode(IntEnum):
     TOO_MANY_REQUESTS = 429
     INTERNAL_SERVER_ERROR = 500
 
-class AdminStatus(str, Enum):
-    active = "active"
-    disabled = "disabled"
+class UserStatus(str, Enum):
+    ACTIVE = "active"
+    SUSPENDED = "suspended"
+    INACTIVE = "inactive"
+
+
+class StaffStatus(str, Enum):
+    ACTIVE = "active"
+    ON_LEAVE = "on_leave"
+    TERMINATED = "terminated"
+
+
+class LeaveStatus(str, Enum):
+    PENDING = "pending"
+    APPROVED = "approved"
+    REJECTED = "rejected"
+    CANCELLED = "cancelled"
+
+
+class LeaveType(str, Enum):
+    ANNUAL = "annual"
+    SICK = "sick"
+    UNPAID = "unpaid"
+    MATERNITY = "maternity"
+    PATERNITY = "paternity"
+    BEREAVEMENT = "bereavement"

@@ -1,0 +1,20 @@
+from sqlalchemy import Column, Integer, String, text, Index
+from sqlalchemy.dialects.postgresql import UUID
+from sqlalchemy.orm import relationship
+
+from app.core.database import Base
+from app.core.util import generate_uuid
+
+
+class Department(Base):
+    __tablename__ = "departments"
+
+    id = Column(Integer, primary_key=True, index=True)
+    uuid = Column(UUID(as_uuid=True), default=generate_uuid, primary_key=True, index=True)
+    
+    name = Column(String(191), nullable=False, unique=True)
+    staff = relationship("Staff", back_populates="department", lazy="noload")
+
+    __table_args__ = (
+        Index("idx_departments_name", "name"),
+    )

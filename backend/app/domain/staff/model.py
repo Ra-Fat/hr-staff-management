@@ -1,0 +1,52 @@
+from datetime import date, datetime, timezone
+
+from sqlalchemy import Column, Date, DateTime, ForeignKey, Index, Integer, Numeric, String, text
+from sqlalchemy import Enum as SqlEnum
+from sqlalchemy.dialects.postgresql import UUID
+from sqlalchemy.orm import relationship
+from sqlalchemy.sql import func
+
+from app.core.database import Base
+from app.core.enum import StaffStatus
+
+
+class Staff(Base):
+    __tablename__ = "staff"
+
+    id = Column(Integer, primary_key=True, index=True)
+    uuid = Column(
+        UUID(as_uuid=True),
+        nullable=False,
+        unique=True,
+        index=True,
+        server_default=text("gen_random_uuid()"),
+    )
+    user_id = Column(Integer, ForeignKey("auth_accounts.id", ondelete="SET NULL"), nullable=True)
+    department_id = Column(Integer, ForeignKey("departments.id"), nullable=True)
+
+    first_name = Column(String(100), nullable=False)
+    last_name = Column(String(100), nullable=False)
+    position = Column(String(100), nullable=True)
+    hire_date = Column(Date, nullable=True)
+    salary = Column(Numeric(12, 2), nullable=True)
+    profile_url = Column(String(500), nullable=True)
+
+    status = Column(SqlEnum(StaffStatus, name="staff_status_enum"), nullable=False, default=StaffStatus.ACTIVE)
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
+    updated_at = Column(DateTime(timezone=True), onupdate=func.now())
+
+    auth_account = relationship("AuthAccount", back_populates="staff_profile", lazy="selectin")
+    department = relationship("Department", back_populates="staff", lazy="selectin")
+
+    leave_requests = relationship("LeaveRequest", back_populates="staff", lazy="noload")
+    attendance_records = relationship("Attendance", back_populates="staff", lazy="noload")
+
+    __table_args__ = (
+        Index("idx_staff_user_id", "user_id"),
+        Index("idx_staff_department_id", "department_id"),
+        Index("idx_staff_status", "status"),
+    )
+
+    @property
+    def full_name(self) -> str:
+        return f"{self.first_name} {self.last_name}" 
