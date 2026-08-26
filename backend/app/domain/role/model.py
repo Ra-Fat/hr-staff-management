@@ -8,15 +8,15 @@ from app.core.util import generate_uuid
 
 
 class Permission(Base):
-    __tablename__ = "permissions"
+    __tablename__ = "auth_permissions"
 
     id = Column(Integer, primary_key=True, index=True)
     uuid = Column(UUID(as_uuid=True), default=generate_uuid, primary_key=True, index=True)
     
-    module = Column(String(100), nullable=False)
-    group = Column(String(100), nullable=True)
-    name = Column(String(191), nullable=False)
-    codename = Column(String(191), nullable=False, unique=True)
+    module = Column(String(255), nullable=False)
+    group = Column(String(255), nullable=True)
+    name = Column(String(255), nullable=False)
+    codename = Column(String(255), nullable=False, unique=True)
 
     role_permissions = relationship("RolePermission", back_populates="permission", lazy="noload")
 
@@ -34,6 +34,8 @@ class Role(Base):
 
     id = Column(Integer, primary_key=True, index=True)
     uuid = Column(UUID(as_uuid=True), default=generate_uuid, primary_key=True, index=True)
+
+    name = Column(String(191), nullable=False, unique=True)
 
     description = Column(String(255), nullable=True)
 

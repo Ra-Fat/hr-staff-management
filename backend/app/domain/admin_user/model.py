@@ -23,7 +23,6 @@ class AdminUser(Base):
     status = Column(SqlEnum(UserStatus, name="user_status_enum"), nullable=False, default=UserStatus.ACTIVE)
     role_id = Column(Integer, ForeignKey("auth_roles.id", ondelete="SET NULL"), nullable=True)
 
-
     created_at = Column(DateTime(timezone=True), server_default=func.now())
     updated_at = Column(DateTime(timezone=True), onupdate=func.now())
 

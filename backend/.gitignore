@@ -11,6 +11,11 @@ __pycache__/
 .env
 .env.*
 
+# Virtual environments
+venv/
+.venv/
+env/
+
 # IDEs and editors
 .vscode/
 .idea/

@@ -19,7 +19,7 @@ def get_lang() -> int:
     return _language_index.get()
 
 def resolve_lang(code: Optional[str]) -> int:
-    """Map a client language code ('en', 'kh', 'zh', ...) to a translation
+    """Map a client language code ('en', 'kh') to a translation
     index, falling back to the default language for unknown/missing codes.
     Accepts raw Accept-Language values like 'km-KH,km;q=0.9'."""
     if not code:
