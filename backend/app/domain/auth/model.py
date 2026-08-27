@@ -5,7 +5,6 @@ from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
 
 from app.core.database import Base
-from app.core.enum import UserStatus
 from app.core.util import generate_uuid
 
 

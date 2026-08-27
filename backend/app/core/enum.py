@@ -13,7 +13,7 @@ class StatusCode(IntEnum):
     TOO_MANY_REQUESTS = 429
     INTERNAL_SERVER_ERROR = 500
 
-class UserStatus(str, Enum):
+class AdminStatus(str, Enum):
     ACTIVE = "active"
     SUSPENDED = "suspended"
     INACTIVE = "inactive"

@@ -40,4 +40,43 @@ class BaseRepository(Generic[ModelX]):
         await self.session.delete(instance)
         await self.session.commit()
         return instance
+
+    async def list_paginated(
+        self, 
+        page: int= 1,
+        page_size: int = 10,
+        filters: Optional[Sequence[ColumnElement]] = None,
+        order_by: Optional[Sequence[ColumnElement]] = None,
+    ) -> Tuple[List[ModelX], int, int]:
+
+        page = max(page, 1)
+        page_size = max(page_size, 1)
+
+        where = filters or []
+        order = order_by if order_by is not None else self.default_order_by()
+
+        total_records: int = (
+            await self.session.execute(
+                select(func.count()).select_from(self.model_class).where(*where)
+            )
+        ).scalars_one()
+
+        stmt = select(self.model_class).where(*where)
+        if order:
+            stmt = stmt.order_by(*order)
+        offset = (page - 1) * page_size
+        rows = (
+            await self.session.execute(stmt.offset(offset).limit(page_size))
+        ).scalars().all()
+
+
+        total_pages = (total_records + page_size -1) // page_size if total_records else 0 
+        return list(rows), total_records, total_pages
+
+    def build_filters(self, **kwargs: Any) -> List[ColumnElement]:
+         return []
+
+
+    def default_order_by(self) -> List[ColumnElement]:
+        return []
     

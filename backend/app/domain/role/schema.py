@@ -73,8 +73,6 @@ class RoleSummarySchema(BaseModel):
     uuid: UUID
     name: str
     description: Optional[str] = None
-    badge_color: str
-    is_system: bool
     permission_count: int = 0
     permission_counts_by_module: Dict[str, str] = {}
 

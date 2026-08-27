@@ -4,7 +4,7 @@ from uuid import UUID
 
 from pydantic import BaseModel, ConfigDict, EmailStr, Field
 
-from app.core.enum import UserStatus
+from app.core.enum import AdminStatus
 
 
 class RoleRefSchema(BaseModel):
@@ -32,7 +32,7 @@ class AdminUserSchema(BaseModel):
     uuid: UUID
     email: str
     full_name: Optional[str] = None
-    status: UserStatus
+    status: AdminStatus
      # The ORM relationship is named `account_roles`; expose it as `role` in the API.
     role: Optional[RoleRefSchema] = Field(None, validation_alias="account_roles")
     last_login: Optional[datetime] = None
