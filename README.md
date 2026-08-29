@@ -2,23 +2,6 @@
 
 A full-stack practice project for learning modern backend and frontend development using FastAPI and Next.js. This project focuses on building a realistic HR and staff management system with authentication, role-based access, attendance tracking, leave requests, and scalable features that can be expanded as a real product.
 
-## Project Goal
-
-The goal of this project is to build and improve my understanding of:
-
-- FastAPI backend development
-- Next.js frontend development
-- JWT-based authentication and authorization
-- Role-based access control for admin and staff users
-- Attendance and leave management flows
-- Cloud object storage with Cloudflare R2
-- OAuth login integration such as Google Sign-In
-- Rate limiting and API protection
-- Testing with unit, integration, and API tests
-- Deployment and project structure best practices
-
----
-
 ## Overview
 
 This system is designed to manage a company’s staff information and HR operations. The admin manages the platform, creates staff accounts, assigns roles and departments, and monitors employee activities. Staff members log in to their assigned account and use the system to manage their profile, attendance, and leave requests.
