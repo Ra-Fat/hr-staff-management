@@ -94,3 +94,22 @@ class AdminUserService(BaseService[AdminUserRepository]):
             instance.id, realm=self.realm, tenant_code=self.tenant_code
         )
         return app_success(data=self.serialize(instance))
+
+
+    async def disable(self, uuid):
+        instance = await self._get_or_raise(uuid)
+        instance.status = AdminStatus.disabled
+        await self.repository.save(instance)
+        instance = await self.repository.get_by_id(instance.id)
+
+        return app_success(data=self.serialize(instance))
+
+    async def enable(self, uuid):
+        instance = await self._get_or_raise(uuid)
+        instance.status = AdminStatus.active
+        await self.repository.save(instance)
+        instance = await self.repository.get_by_id(
+            instance.id, realm=self.realm, tenant_code=self.tenant_code
+        )
+        return app_success(data=self.serialize(instance))
+

@@ -20,7 +20,7 @@ class AdminUser(Base):
     full_name = Column(String(191), nullable=True)
     last_login = Column(DateTime(timezone=True), nullable=True)
 
-    status = Column(SqlEnum(AdminStatus, name="admin_status_enum"), nullable=False, default=AdminStatus.ACTIVE)
+    status = Column(SqlEnum(AdminStatus, name="admin_status_enum"), nullable=False, default=AdminStatus.active)
     role_id = Column(Integer, ForeignKey("auth_roles.id", ondelete="SET NULL"), nullable=True)
 
     created_at = Column(DateTime(timezone=True), server_default=func.now())
