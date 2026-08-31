@@ -22,6 +22,7 @@ class EmailVerification(Base):
 
     created_at = Column(DateTime(timezone=True), server_default=func.now())
     updated_at = Column(DateTime(timezone=True), onupdate=func.now())
+    deleted_at = Column(DateTime(timezone=True), nullable=True, default=None)
 
     __table_args__ = (
         Index("idx_email_verifications_email", "email"),

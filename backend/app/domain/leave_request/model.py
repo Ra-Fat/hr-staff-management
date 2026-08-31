@@ -24,11 +24,15 @@ class LeaveRequest(Base):
     end_date = Column(Date, nullable=False)
     status = Column(SqlEnum(LeaveStatus, name="leave_status_enum"), nullable=False, default=LeaveStatus.PENDING)
     reviewed_by = Column(Integer, ForeignKey("auth_accounts.id", ondelete="SET NULL"), nullable=True)
-    created_at = Column(DateTime(timezone=True), server_default=func.now())
 
     staff = relationship("Staff", back_populates="leave_requests", lazy="selectin")
     reviewed_by_user = relationship("AuthAccount", lazy="selectin")
 
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
+    updated_at = Column(DateTime(timezone=True), onupdate=func.now())
+    deleted_at = Column(DateTime(timezone=True), nullable=True, default=None)
+
+    
     __table_args__ = (
         Index("idx_leave_requests_staff_id", "staff_id"),
         Index("idx_leave_requests_status", "status"),

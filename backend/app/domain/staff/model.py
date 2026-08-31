@@ -21,6 +21,7 @@ class Staff(Base):
         index=True,
         server_default=text("gen_random_uuid()"),
     )
+
     user_id = Column(Integer, ForeignKey("auth_accounts.id", ondelete="SET NULL"), nullable=True)
     department_id = Column(Integer, ForeignKey("departments.id"), nullable=True)
 
@@ -32,14 +33,16 @@ class Staff(Base):
     profile_url = Column(String(500), nullable=True)
 
     status = Column(SqlEnum(StaffStatus, name="staff_status_enum"), nullable=False, default=StaffStatus.ACTIVE)
-    created_at = Column(DateTime(timezone=True), server_default=func.now())
-    updated_at = Column(DateTime(timezone=True), onupdate=func.now())
 
     auth_account = relationship("AuthAccount", back_populates="staff_profile", lazy="selectin")
     department = relationship("Department", back_populates="staff", lazy="selectin")
 
     leave_requests = relationship("LeaveRequest", back_populates="staff", lazy="noload")
     attendance_records = relationship("Attendance", back_populates="staff", lazy="noload")
+
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
+    updated_at = Column(DateTime(timezone=True), onupdate=func.now())
+    deleted_at = Column(DateTime(timezone=True), nullable=True, default=None)
 
     __table_args__ = (
         Index("idx_staff_user_id", "user_id"),

@@ -22,6 +22,7 @@ class Permission(Base):
 
     created_at = Column(DateTime(timezone=True), server_default=func.now(), nullable=False)
     updated_at = Column(DateTime(timezone=True), server_default=func.now(), onupdate=func.now(), nullable=False)
+    deleted_at = Column(DateTime(timezone=True), nullable=True, default=None)
     
     __table_args__ = (
         Index("idx_permissions_module", "module"),
@@ -51,7 +52,7 @@ class Role(Base):
 
 
 class RolePermission(Base):
-    __tablename__ = "auth_role_permissions"
+    __tablename__ = "   "
 
     id = Column(Integer, primary_key=True, index=True)
     uuid = Column(UUID(as_uuid=True), default=generate_uuid, primary_key=True, index=True)

@@ -47,6 +47,7 @@ class RoleSchema(BaseModel):
     name: str
     description: Optional[str] = None
     created_at: Optional[datetime] = None
+    deleted_at: Optional[datetime] = None
     permissions: List[PermissionSchema] = []
 
     model_config = ConfigDict(from_attributes=True)

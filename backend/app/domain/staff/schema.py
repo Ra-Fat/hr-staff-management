@@ -44,7 +44,8 @@ class StaffSchema(BaseModel):
     position: Optional[str] = None
     status: StaffStatus
     created_at: Optional[datetime] = None
-
+    deleted_at: Optional[datetime] = None
+    
     model_config = ConfigDict(from_attributes=True)
 
 

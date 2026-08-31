@@ -1,6 +1,8 @@
-from sqlalchemy import Column, Integer, String, text, Index
+from sqlalchemy import Column, Date, DateTime, ForeignKey, Index, Integer, text, String
+
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import relationship
+from sqlalchemy.sql import func
 
 from app.core.database import Base
 from app.core.util import generate_uuid
@@ -14,6 +16,10 @@ class Department(Base):
     
     name = Column(String(191), nullable=False, unique=True)
     staff = relationship("Staff", back_populates="department", lazy="noload")
+
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
+    updated_at = Column(DateTime(timezone=True), onupdate=func.now())
+    deleted_at = Column(DateTime(timezone=True), nullable=True, default=None)
 
     __table_args__ = (
         Index("idx_departments_name", "name"),

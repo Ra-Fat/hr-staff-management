@@ -26,4 +26,7 @@ class AttendanceSchema(BaseModel):
     check_out: Optional[datetime] = None
     date: date
 
+    created_at: Optional[datetime] = None
+    deleted_at: Optional[datetime]
+
     model_config = ConfigDict(from_attributes=True)

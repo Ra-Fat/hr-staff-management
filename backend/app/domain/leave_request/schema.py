@@ -35,6 +35,8 @@ class LeaveRequestSchema(BaseModel):
     status: LeaveStatus
     reviewed_by: Optional[UUID] = None
     created_at: Optional[datetime] = None
+    deleted_at: Optional[datetime]
+    
 
     model_config = ConfigDict(from_attributes=True)
 
