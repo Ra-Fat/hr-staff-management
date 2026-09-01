@@ -12,6 +12,7 @@ from app.core.exceptions import (
     validation_exception_handler,
 )
 
+from app.api import router as v1_router
 
 
 _is_production = settings.ENVIRONMENT.lower() == "production"
@@ -50,7 +51,7 @@ app.add_exception_handler(Exception, unhandled_exception_handler)
 
 # --- Routes ---
 
-# app.include_router(router)
+app.include_router(v1_router)
 
 @app.get('/health', tags= ['Health'])
 def health():

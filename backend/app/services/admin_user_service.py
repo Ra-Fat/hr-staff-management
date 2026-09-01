@@ -1,7 +1,8 @@
 from typing import Optional
 
-from sqlalchemy import or_, select
-from core.enum import AdminStatus, StatusCode
+from sqlalchemy import select
+
+from app.core.enum import AdminStatus, StatusCode
 from app.core.exceptions import (
     BadRequestError,
     ConflictError,
@@ -16,6 +17,7 @@ from app.core.lib.translate import get_translation
 from app.domain.role.model import Role
 from app.repositories.admin_user_repository import AdminUserRepository
 
+
 class AdminUserService(BaseService[AdminUserRepository]):
 
     response_schema = AdminUserSchema
@@ -23,34 +25,30 @@ class AdminUserService(BaseService[AdminUserRepository]):
     def __init__(self, repository: AdminUserRepository) -> None:
         super().__init__(repository)
 
+    async def _get_or_raise(
+        self,
+        uuid,
+        not_found_msg: Optional[str] = None,
+        include_deleted: bool = False,
+    ):
 
-    async def _get_or_raise(self, uuid, not_found_msg = None):
-        instance = await self.repository.get_by_uuid(uuid)
+        instance = await self.repository.get_by_uuid(uuid, include_deleted=include_deleted)
         if not instance:
             raise NotFoundError(
                 not_found_msg or get_translation("admin_not_found")
             )
         return instance
 
-
-    async def _validate_role(self, role_id:int) -> None:
+    async def _validate_role(self, role_id: int) -> None:
         stmt = select(Role).where(Role.id == role_id)
         result = await self.repository.session.execute(stmt)
         if not result.scalars().first():
             raise ValidationError(get_translation("role_not_found"))
 
 
-    async def filter(self, page = 1, page_size = 1, **filter_params):
-        return await super().filter(
-            page = page, 
-            page_size = page_size,
-            **filter_params
-        )
-
     async def create(self, data: AdminUserCreate):
-
         if await self.repository.get_by_email(data.email):
-            raise ConflictError(get_translation('email exists'))
+            raise ConflictError(get_translation("email_exists"))
 
         await self._validate_role(data.role_id)
 
@@ -70,46 +68,50 @@ class AdminUserService(BaseService[AdminUserRepository]):
 
         if data.password is None:
             payload["temp_password"] = temp_password
-            return app_success(code=StatusCode.CREATED, data=payload)
 
+        return app_success(code=StatusCode.CREATED, data=payload)
 
-    async def update(self, uuid, data: AdminUserUpdate , not_found_msg = None):
-        instance = await self._get_or_raise(uuid)
+    async def update(self, uuid, data: AdminUserUpdate, not_found_msg: Optional[str] = None):
+        instance = await self._get_or_raise(uuid, not_found_msg)
+
         if data.full_name is not None:
             instance.full_name = data.full_name
+
         if data.email is not None:
             conflict = await self.repository.get_by_email(data.email)
             if conflict and conflict.id != instance.id:
                 raise ConflictError(get_translation("email_exists"))
             instance.email = data.email
+
         if data.role_id is not None:
             await self._validate_role(data.role_id)
             instance.role_id = data.role_id
+
         if data.password is not None:
             instance.password_hash = hash_password(data.password)
 
         await self.repository.save(instance)
 
-        instance = await self.repository.get_by_id(
-            instance.id, realm=self.realm, tenant_code=self.tenant_code
-        )
+        instance = await self.repository.get_by_id(instance.id)
         return app_success(data=self.serialize(instance))
-
 
     async def disable(self, uuid):
         instance = await self._get_or_raise(uuid)
         instance.status = AdminStatus.disabled
         await self.repository.save(instance)
         instance = await self.repository.get_by_id(instance.id)
-
         return app_success(data=self.serialize(instance))
 
     async def enable(self, uuid):
         instance = await self._get_or_raise(uuid)
         instance.status = AdminStatus.active
         await self.repository.save(instance)
-        instance = await self.repository.get_by_id(
-            instance.id, realm=self.realm, tenant_code=self.tenant_code
-        )
+        instance = await self.repository.get_by_id(instance.id)
         return app_success(data=self.serialize(instance))
 
+    async def delete(self, uuid, current_user_id: Optional[int] = None, not_found_msg: Optional[str] = None):
+        instance = await self._get_or_raise(uuid, not_found_msg)
+        if current_user_id is not None and instance.id == current_user_id:
+            raise BadRequestError(get_translation("cannot_delete_self"))
+        deleted = await self.repository.delete(instance)
+        return app_success(data=self.serialize(deleted))

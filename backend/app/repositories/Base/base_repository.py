@@ -1,4 +1,5 @@
 from typing import Any, Generic, List, Optional, Sequence, Tuple, Type, TypeVar
+from datetime import datetime, timezone
 
 from sqlalchemy import func, select
 from sqlalchemy.sql import ColumnElement
@@ -13,16 +14,18 @@ class BaseRepository(Generic[ModelX]):
     def __init__(self, session: AsyncSession) -> None:
                 self.session = session
 
-    async def get_by_id(self, id: Any) -> Optional[ModelX]:
-        result = await self.session.execute(
-            select(self.model_class).where(self.model_class.id == id)
-        )
+    async def get_by_id(self, id: Any, include_deleted: bool= False) -> Optional[ModelX]:
+        stmt = select(self.model_class).where(self.model_class.id == id)
+        if not include_deleted:
+            stmt = stmt.where(self.model_class.deleted_at.is_(None))
+        result = await self.session.execute(stmt)
         return result.scalars().first()
 
-    async def get_by_uuid(self, uuid: Any) -> Optional[ModelX]:
-        result = await self.session.execute(
-            select(self.model_class).where(self.model_class.uuid == uuid)
-        )
+    async def get_by_uuid(self, uuid: Any, include_deleted: bool = False) -> Optional[ModelX]:
+        stmt = select(self.model_class).where(self.model_class.uuid == uuid)
+        if not include_deleted:
+            stmt = stmt.where(self.model_class.deleted_at.is_(None))
+        result = await self.session.execute(stmt)
         return result.scalars().first()
 
     async def create(self, **kwargs: Any) -> ModelX:
@@ -36,9 +39,25 @@ class BaseRepository(Generic[ModelX]):
         self.session.add(instance)
         await self.session.commit()
 
-    async def delete(self, instance: ModelX) -> ModelX:
+    async def hard_delete(self, instance: ModelX) -> ModelX:
+        """Use only  to remove the row permanently."""
         await self.session.delete(instance)
         await self.session.commit()
+        return instance
+
+    async def restore(self, instance: ModelX) -> ModelX:
+        instance.deleted_at = None
+        self.session.add(instance)
+        await self.session.commit()
+        await self.session.refresh(instance)
+        return instance
+
+    async def delete(self, instance: ModelX) -> ModelX:
+        "Soft Delete: stamps delete_at instead of removing the row"
+        instance.deleted_at = datetime.now(timezone.utc)
+        self.session.add(instance)
+        await self.session.commit()
+        await self.session.refresh(instance)
         return instance
 
     async def list_paginated(
@@ -47,12 +66,16 @@ class BaseRepository(Generic[ModelX]):
         page_size: int = 10,
         filters: Optional[Sequence[ColumnElement]] = None,
         order_by: Optional[Sequence[ColumnElement]] = None,
+        include_deleted: bool = False,
     ) -> Tuple[List[ModelX], int, int]:
 
         page = max(page, 1)
         page_size = max(page_size, 1)
 
-        where = filters or []
+        where = list(filters) if filters else []
+        if not include_deleted:
+            where.append(self.model_class.deleted_at.is_(None))
+        
         order = order_by if order_by is not None else self.default_order_by()
 
         total_records: int = (
@@ -75,7 +98,6 @@ class BaseRepository(Generic[ModelX]):
 
     def build_filters(self, **kwargs: Any) -> List[ColumnElement]:
          return []
-
 
     def default_order_by(self) -> List[ColumnElement]:
         return []
