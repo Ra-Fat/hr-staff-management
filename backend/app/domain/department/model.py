@@ -5,14 +5,15 @@ from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
 
 from app.core.database import Base
-from app.core.util import generate_uuid
+from sqlalchemy.schema import UniqueConstraint
+from app.core.utils import generate_uuid
 
 
 class Department(Base):
     __tablename__ = "departments"
 
     id = Column(Integer, primary_key=True, index=True)
-    uuid = Column(UUID(as_uuid=True), default=generate_uuid, primary_key=True, index=True)
+    uuid = Column(UUID(as_uuid=True), default=generate_uuid, unique=True, index=True)
     
     name = Column(String(191), nullable=False, unique=True)
     staff = relationship("Staff", back_populates="department", lazy="noload")
@@ -23,4 +24,5 @@ class Department(Base):
 
     __table_args__ = (
         Index("idx_departments_name", "name"),
+        UniqueConstraint("uuid"),
     )

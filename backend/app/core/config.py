@@ -28,6 +28,6 @@ class Settings(BaseSettings):
     EMAIL_FROM: str = "no-reply@hrsystem.local"
     EMAIL_FROM_NAME: str = "HR System"
 
-    model_config = {"env_file": ".env", "env_file_encoding": "utf-8"}
+    model_config = {"env_file": ".env", "env_file_encoding": "utf-8", "extra": "ignore"}
 
 settings = Settings()

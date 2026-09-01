@@ -4,7 +4,8 @@ from sqlalchemy import Column, Date, DateTime, ForeignKey, Index, Integer, text
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
-from app.core.util import generate_uuid
+from sqlalchemy.schema import UniqueConstraint
+from app.core.utils import generate_uuid
 
 
 from app.core.database import Base
@@ -14,7 +15,7 @@ class Attendance(Base):
     __tablename__ = "attendance"
 
     id = Column(Integer, primary_key=True, index=True)
-    uuid = Column(UUID(as_uuid=True), default=generate_uuid, primary_key=True, index=True)
+    uuid = Column(UUID(as_uuid=True), default=generate_uuid, unique=True, index=True)
     
     staff_id = Column(Integer, ForeignKey("staff.id", ondelete="CASCADE"), nullable=False)
     check_in = Column(DateTime(timezone=True), nullable=True)
@@ -30,5 +31,6 @@ class Attendance(Base):
     __table_args__ = (
         Index("idx_attendance_staff_id", "staff_id"),
         Index("idx_attendance_date", "date"),
+        UniqueConstraint("uuid"),
         Index("idx_attendance_staff_date", "staff_id", "date", unique=True),
     )

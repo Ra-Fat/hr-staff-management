@@ -55,7 +55,7 @@ def do_run_migrations(connection: Connection) -> None:
     context.configure(
         connection = connection,
         target_metadata= target_metadata,
-        VERSION_TABLE = VERSION_TABLE
+        version_table=VERSION_TABLE,
     )
     with context.begin_transaction():
         context.run_migrations()

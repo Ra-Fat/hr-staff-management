@@ -5,8 +5,10 @@ from sqlalchemy import Enum as SqlEnum
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
+from sqlalchemy.schema import UniqueConstraint
 
 from app.core.database import Base
+from app.core.utils import generate_uuid
 from app.core.enum import StaffStatus
 
 
@@ -14,13 +16,7 @@ class Staff(Base):
     __tablename__ = "staff"
 
     id = Column(Integer, primary_key=True, index=True)
-    uuid = Column(
-        UUID(as_uuid=True),
-        nullable=False,
-        unique=True,
-        index=True,
-        server_default=text("gen_random_uuid()"),
-    )
+    uuid = Column(UUID(as_uuid=True), default=generate_uuid, unique=True, index=True)
 
     user_id = Column(Integer, ForeignKey("auth_accounts.id", ondelete="SET NULL"), nullable=True)
     department_id = Column(Integer, ForeignKey("departments.id"), nullable=True)
@@ -48,6 +44,7 @@ class Staff(Base):
         Index("idx_staff_user_id", "user_id"),
         Index("idx_staff_department_id", "department_id"),
         Index("idx_staff_status", "status"),
+        UniqueConstraint("uuid"),
     )
 
     @property

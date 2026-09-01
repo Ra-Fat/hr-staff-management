@@ -1,8 +1,13 @@
 from fastapi import FastAPI
-from app.core.config import settings
 from fastapi.middleware.cors import CORSMiddleware
 from starlette.exceptions import HTTPException as StarletteHTTPException
 from fastapi.exceptions import RequestValidationError
+from contextlib import asynccontextmanager
+
+from app.core.config import settings
+from app.core.database import close_db, init_db
+from app.api import router as v1_router
+
 
 from app.core.exceptions import (
     AppException,
@@ -12,8 +17,12 @@ from app.core.exceptions import (
     validation_exception_handler,
 )
 
-from app.api import router as v1_router
 
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    await init_db(settings.DATABASE_URL)
+    yield
+    await close_db()
 
 _is_production = settings.ENVIRONMENT.lower() == "production"
 
@@ -23,6 +32,7 @@ app = FastAPI(
     docs_url=None if _is_production else "/docs",
     redoc_url=None if _is_production else "/redoc",
     openapi_url=None if _is_production else "/openapi.json",
+    lifespan=lifespan
 )
 
 # --- Middleware ---

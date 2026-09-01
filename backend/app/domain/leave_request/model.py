@@ -5,17 +5,19 @@ from sqlalchemy import Enum as SqlEnum
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
-from app.core.util import generate_uuid
+from app.core.utils import generate_uuid
 
 from app.core.database import Base
 from app.core.enum import LeaveStatus, LeaveType
+from sqlalchemy.schema import UniqueConstraint
+
 
 
 class LeaveRequest(Base):
     __tablename__ = "leave_requests"
 
     id = Column(Integer, primary_key=True, index=True)
-    uuid = Column(UUID(as_uuid=True), default=generate_uuid, primary_key=True, index=True)
+    uuid = Column(UUID(as_uuid=True), default=generate_uuid, unique=True, index=True)
     
 
     staff_id = Column(Integer, ForeignKey("staff.id", ondelete="CASCADE"), nullable=False)
@@ -36,5 +38,6 @@ class LeaveRequest(Base):
     __table_args__ = (
         Index("idx_leave_requests_staff_id", "staff_id"),
         Index("idx_leave_requests_status", "status"),
+        UniqueConstraint("uuid"),
         Index("idx_leave_requests_staff_status", "staff_id", "status"),
     )
