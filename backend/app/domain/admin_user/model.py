@@ -28,7 +28,7 @@ class AdminUser(Base):
     updated_at = Column(DateTime(timezone=True), onupdate=func.now())
     deleted_at = Column(DateTime(timezone=True), nullable=True, default=None)
 
-    role_obj = relationship("AccountRole", back_populates="account", lazy="selectin")
+    role_obj = relationship("Role", back_populates="admin_users", lazy="selectin")
 
     __table_args__ = (
         Index("idx_auth_accounts_email", "email"),

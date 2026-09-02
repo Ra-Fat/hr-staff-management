@@ -16,6 +16,21 @@ from app.domain.department.model import Department
 from app.domain.leave_request.model import LeaveRequest
 from app.domain.role.model import Role, RolePermission, Permission
 from app.domain.staff.model import Staff
+from pathlib import Path
+
+
+def process_revision_directives(context, revision, directives):
+    """Auto-generate sequential revision IDs: 001, 002, 003..."""
+    script = directives[0]
+    versions_path = Path(config.get_main_option("script_location")) / "versions"
+
+    existing = [
+        f.stem.split("_")[0] for f in versions_path.glob("*.py")
+        if f.stem[:3].isdigit()
+    ]
+
+    next_num = max([int(n) for n in existing], default=0) + 1
+    script.rev_id = f"{next_num:03d}"
 
 
 config = context.config
@@ -43,6 +58,7 @@ def run_migrations_offline() -> None:
         literal_binds=True,
         dialect_opts={"paramstyle": "named"},
         version_table=VERSION_TABLE,
+        process_revision_directives=process_revision_directives,
     )
     with context.begin_transaction():
         context.run_migrations()
@@ -56,6 +72,7 @@ def do_run_migrations(connection: Connection) -> None:
         connection = connection,
         target_metadata= target_metadata,
         version_table=VERSION_TABLE,
+        process_revision_directives=process_revision_directives, 
     )
     with context.begin_transaction():
         context.run_migrations()

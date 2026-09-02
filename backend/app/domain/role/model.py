@@ -54,7 +54,7 @@ class Role(Base):
 
 
 class RolePermission(Base):
-    __tablename__ = "auth_role_permission"
+    __tablename__ = "auth_role_permissions"
 
     id = Column(Integer, primary_key=True, index=True)  
     uuid = Column(UUID(as_uuid=True), default=generate_uuid, unique=True, index=True) 
@@ -63,4 +63,4 @@ class RolePermission(Base):
     permission_id = Column(Integer, ForeignKey("auth_permissions.id", ondelete="CASCADE"), nullable=False)
 
     role = relationship("Role", back_populates="role_permissions", lazy="noload")
-    permission = relationship("Permission", back_populates="roles", lazy="selectin")
+    permission = relationship("Permission", back_populates="role_permissions", lazy="selectin")

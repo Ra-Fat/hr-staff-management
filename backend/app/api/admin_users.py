@@ -80,7 +80,7 @@ async def disable_admin_user(
     return await service.disable(admin_uuid)
 
 
-@router.patch("/{admin_uuid}/enable", dependencies=[Depends(require_permission("admin_users.disable"))])
+@router.patch("/{admin_uuid}/enable", dependencies=[Depends(require_permission("admin_users.enable"))])
 async def enable_admin_user(
     admin_uuid: UUID,
     service: AdminUserService = Depends(get_service),
