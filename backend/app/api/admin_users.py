@@ -55,7 +55,7 @@ async def view_admin_user(
     return await service.get(admin_uuid)
 
 
-@router.post("", status_code= StatusCode.CREATED, dependencies= [Depends(require_permission("admin_user_create"))])
+@router.post("", status_code= StatusCode.CREATED, dependencies= [Depends(require_permission("admin_users_create"))])
 async def create_admin_user(
     data: AdminUserCreate,
     service: AdminUserService = Depends(get_service)
@@ -63,7 +63,7 @@ async def create_admin_user(
     return await service.create(data=data)
 
 
-@router.put("/{admin_uuid}", dependencies= [Depends(require_permission("admin_user_edit"))])
+@router.put("/{admin_uuid}", dependencies= [Depends(require_permission("admin_users_edit"))])
 async def update_admin_user(
     admin_uuid: str,
     data: AdminUserUpdate,

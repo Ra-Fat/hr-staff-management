@@ -33,11 +33,9 @@ class AdminUserSchema(BaseModel):
     email: str
     full_name: Optional[str] = None
     status: AdminStatus
-     # The ORM relationship is named `account_roles`; expose it as `role` in the API.
-    role: Optional[RoleRefSchema] = Field(None, validation_alias="account_roles")
+    role: Optional[RoleRefSchema] = Field(None, validation_alias="role_obj")
     last_login: Optional[datetime] = None
 
     created_at: Optional[datetime] = None
-    deleted_at: Optional[datetime]
 
     model_config = ConfigDict(from_attributes=True)

@@ -57,7 +57,7 @@ def require_permission(codename: str) -> Callable:
     """
     async def _check(payload: Dict[str, Any] = Depends(get_current_user)) -> Dict[str, Any]:
         role_name: str = payload.get("role", '')
-        if role_name == 'Admin':
+        if role_name == 'admin':
             return payload
 
         permissions: List[str] = payload.get('permissions', [])

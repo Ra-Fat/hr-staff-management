@@ -19,7 +19,7 @@ class Permission(Base):
     name = Column(String(255), nullable=False)
     codename = Column(String(255), nullable=False, unique=True)
 
-    role_permissions = relationship("RolePermission", back_populates="permission", lazy="noload")
+    role_permission = relationship("RolePermission", back_populates="permission", lazy="noload")
 
     created_at = Column(DateTime(timezone=True), server_default=func.now(), nullable=False)
     updated_at = Column(DateTime(timezone=True), server_default=func.now(), onupdate=func.now(), nullable=False)
@@ -41,7 +41,7 @@ class Role(Base):
     name = Column(String(191), nullable=False, unique=True)
     description = Column(String(255), nullable=True)
 
-    role_permissions = relationship("RolePermission", back_populates="role", lazy="selectin", cascade="all, delete-orphan")
+    role_permission = relationship("RolePermission", back_populates="role", lazy="selectin", cascade="all, delete-orphan")
     admin_users = relationship("AdminUser", back_populates="role_obj", lazy="noload")
 
     created_at = Column(DateTime(timezone=True), server_default=func.now(), nullable=False)
@@ -54,7 +54,7 @@ class Role(Base):
 
 
 class RolePermission(Base):
-    __tablename__ = "auth_role_permissions"
+    __tablename__ = "auth_role_permission"
 
     id = Column(Integer, primary_key=True, index=True)  
     uuid = Column(UUID(as_uuid=True), default=generate_uuid, unique=True, index=True) 
@@ -62,5 +62,5 @@ class RolePermission(Base):
     role_id = Column(Integer, ForeignKey("auth_roles.id", ondelete="CASCADE"), nullable=False)
     permission_id = Column(Integer, ForeignKey("auth_permissions.id", ondelete="CASCADE"), nullable=False)
 
-    role = relationship("Role", back_populates="role_permissions", lazy="noload")
-    permission = relationship("Permission", back_populates="role_permissions", lazy="selectin")
+    role = relationship("Role", back_populates="role_permission", lazy="noload")
+    permission = relationship("Permission", back_populates="role_permission", lazy="selectin")

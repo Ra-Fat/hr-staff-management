@@ -28,7 +28,7 @@ class AdminUserRepository(BaseRepository[AdminUser]):
             select(AdminUser)
             .where(match)
             .options(
-                selectinload(AdminUser.role_obj).selectinload(Role.role_permissions).selectinload(RolePermission.permission)
+                selectinload(AdminUser.role_obj).selectinload(Role.role_permission).selectinload(RolePermission.permission)
 
             )
 

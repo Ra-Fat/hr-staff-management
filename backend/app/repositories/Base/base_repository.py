@@ -82,7 +82,7 @@ class BaseRepository(Generic[ModelX]):
             await self.session.execute(
                 select(func.count()).select_from(self.model_class).where(*where)
             )
-        ).scalars_one()
+        ).scalar_one()
 
         stmt = select(self.model_class).where(*where)
         if order:

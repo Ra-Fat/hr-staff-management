@@ -50,7 +50,7 @@ def decode_token(token: str) -> Dict[str, Any]:
     return jwt.decode(
         token,
         settings.JWT_SECRET,
-        algorithms=[settings.JWT_SECRET]
+        algorithms=[settings.JWT_ALGORITHM]
     )
 
 

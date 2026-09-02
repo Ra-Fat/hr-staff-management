@@ -48,7 +48,7 @@ async def _load_user_with_permissions(
         .where(AdminUser.id == user_id)
         .options(
             selectinload(AdminUser.role_obj)
-            .selectinload(Role.role_permissions)
+            .selectinload(Role.role_permission)
             .selectinload(RolePermission.permission)
         )
     )
@@ -59,8 +59,8 @@ def _extract_permissions(user: AdminUser) -> List[str]:
     if not user.role_obj:
         return []
     return [
-        rp.permissions.codename
-        for rp in (user.role_obj.role_permissions or [])
+        rp.permission.codename
+        for rp in (user.role_obj.role_permission or [])
         if rp.permission
     ]
 
