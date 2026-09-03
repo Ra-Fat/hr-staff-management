@@ -6,7 +6,7 @@ A full-stack practice project for learning modern backend and frontend developme
 
 This system is designed to manage a company’s staff information and HR operations. The admin manages the platform, creates staff accounts, assigns roles and departments, and monitors employee activities. Staff members log in to their assigned account and use the system to manage their profile, attendance, and leave requests.
 
-This project is intended as a learning playground, so it includes both core features and additional technologies that help improve real-world product skills.
+This project is intended as a learning playground, so it includes both core features and additional technologies that help improve skills.
 
 ---
 
@@ -20,7 +20,6 @@ This project is intended as a learning playground, so it includes both core feat
 - Role-based permissions
 - JWT access tokens and refresh flow
 - Secure password handling
-- Optional Google OAuth login
 - Session and account management improvements
 
 ### 2. Admin Features
@@ -107,9 +106,7 @@ This project is intended as a learning playground, so it includes both core feat
 ### Cloud and Third-Party Services
 
 - Cloudflare R2 for file storage
-- Firebase for optional push notifications, auth, or real-time features
-- Google OAuth for social login
-- Email service for account verification and notifications
+
 
 ### Testing and Quality
 
@@ -173,40 +170,6 @@ hr-staff-management/
 >
 > - backend container for the FastAPI service
 > - frontend container for the Next.js app
-
----
-
-## Roles in the System
-
-### Admin
-
-- Manages all employees
-- Creates staff accounts
-- Assigns departments and roles
-- Reviews attendance and leave requests
-- Controls platform permissions
-
-### Staff
-
-- Uses the account created by admin
-- Logs in securely
-- Checks in and checks out
-- Requests leave
-- Updates personal profile information
-- Views attendance history and personal dashboard
-
----
-
-## Future Ideas
-
-- Custom dashboard analytics
-- Attendance reports by department
-- Monthly payroll preparation support
-- Notification email system
-- Google or Microsoft sign-in
-- Mobile-friendly UI improvements
-- Advanced filtering and search
-- Audit logs for admin actions
 
 ---
 
