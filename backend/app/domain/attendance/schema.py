@@ -8,7 +8,6 @@ class AttendanceCreate(BaseModel):
     staff_uuid: UUID
     check_in: Optional[datetime] = None
     check_out: Optional[datetime] = None
-    date: Optional[date] = None
 
 
 class AttendanceCheckin(BaseModel):
@@ -27,6 +26,5 @@ class AttendanceSchema(BaseModel):
     date: date
 
     created_at: Optional[datetime] = None
-    deleted_at: Optional[datetime]
 
     model_config = ConfigDict(from_attributes=True)

@@ -17,6 +17,5 @@ class DepartmentSchema(BaseModel):
     uuid: UUID
     name: str
     created_at: Optional[datetime] = None
-    deleted_at: Optional[datetime]
 
     model_config = ConfigDict(from_attributes=True)

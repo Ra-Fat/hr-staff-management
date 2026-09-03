@@ -22,11 +22,6 @@ class EmailVerification(Base):
         nullable=False,                          
     )
     email = Column(String(191), nullable=False, unique=True)
-    code_hash = Column(String(64), nullable=False)
-    expires_at = Column(DateTime(timezone=True), nullable=False)
-    verified = Column(Boolean, nullable=False, default=False)
-    attempts = Column(Integer, nullable=False, default=0)
-    last_sent_at = Column(DateTime(timezone=True), nullable=True)
 
     created_at = Column(DateTime(timezone=True), server_default=func.now())
     updated_at = Column(DateTime(timezone=True), onupdate=func.now())
@@ -40,6 +35,7 @@ class EmailVerification(Base):
 
 
 class TokenBlacklist(Base):
+    """Invalidated JWT registry — logs out users instantly by revoking their token's `jti` before expiry."""
     __tablename__ = "auth_token_blacklist"
 
     id = Column(Integer, primary_key=True, index=True)

@@ -22,10 +22,10 @@ class AdminUser(Base):
         index=True,
         nullable=False,                          
     )
-
     email = Column(String(255), nullable=False, unique=True, index=True)
     password_hash = Column(String(255), nullable=False)
     full_name = Column(String(191), nullable=True)
+
     last_login = Column(DateTime(timezone=True), nullable=True)
 
     status = Column(SqlEnum(AdminStatus, name="admin_status_enum"), nullable=False, default=AdminStatus.active)
@@ -33,6 +33,7 @@ class AdminUser(Base):
 
     created_at = Column(DateTime(timezone=True), server_default=func.now())
     updated_at = Column(DateTime(timezone=True), onupdate=func.now())
+    # soft deleted
     deleted_at = Column(DateTime(timezone=True), nullable=True, default=None)
 
     role_obj = relationship("Role", back_populates="admin_users", lazy="selectin")

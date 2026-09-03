@@ -25,7 +25,7 @@ class AdminUserUpdate(BaseModel):
     full_name: Optional[str] = None
     email: Optional[EmailStr] = None
     password: Optional[str] = None
-    role_id: Optional[int] = None
+    role_uuid: Optional[int] = None
 
 
 class AdminUserSchema(BaseModel):

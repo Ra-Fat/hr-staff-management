@@ -26,12 +26,14 @@ class LeaveRequest(Base):
         nullable=False,                          
     )
     
-
     staff_id = Column(Integer, ForeignKey("staff.id", ondelete="CASCADE"), nullable=False)
+
     leave_type = Column(SqlEnum(LeaveType, name="leave_type_enum"), nullable=False)
     start_date = Column(Date, nullable=False)
     end_date = Column(Date, nullable=False)
+
     status = Column(SqlEnum(LeaveStatus, name="leave_status_enum"), nullable=False, default=LeaveStatus.PENDING)
+
     reviewed_by = Column(Integer, ForeignKey("auth_accounts.id", ondelete="SET NULL"), nullable=True)
 
     staff = relationship("Staff", back_populates="leave_requests", lazy="selectin")

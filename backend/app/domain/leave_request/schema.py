@@ -15,7 +15,7 @@ class StaffRefSchema(BaseModel):
 
 
 class LeaveRequestCreate(BaseModel):
-    staff_uuod: UUID
+    staff_uuid: UUID
     leave_type: LeaveType
     start_date: date
     end_date: date
@@ -28,7 +28,7 @@ class LeaveRequestUpdate(BaseModel):
 
 class LeaveRequestSchema(BaseModel):
     uuid: UUID
-    staff_id: int
+    staff_uuid: int
     leave_type: LeaveType
     start_date: date
     end_date: date
