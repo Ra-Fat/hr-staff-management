@@ -1,6 +1,6 @@
 # HR Staff Management
 
-A full-stack practice project for learning modern backend and frontend development using FastAPI and Next.js. This project focuses on building a realistic HR and staff management system with authentication, role-based access, attendance tracking, leave requests, and scalable features that can be expanded as a real product.
+A full-stack practice project for practice backend and frontend development using FastAPI and Next.js. This project focuses on building a realistic HR and staff management system with authentication, role-based access, attendance tracking, leave requests, and scalable features that can be expanded as a real product.
 
 ## Overview
 
