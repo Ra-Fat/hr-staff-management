@@ -85,6 +85,8 @@ async def login(
     repo = AdminUserRepository(db)
 
     user = await repo.get_by_email(body.email)
+    print(f'DEBUG email received: {repr(body.email)}')
+    print(f'DEBUG user found: {user is not None}')
     if not user or not verify_password(body.password, user.password_hash):
         raise AuthenticationError('Invalid email or password')
 

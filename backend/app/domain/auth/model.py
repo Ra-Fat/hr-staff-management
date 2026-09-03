@@ -13,7 +13,14 @@ class EmailVerification(Base):
     __tablename__ = "email_verifications"
 
     id = Column(Integer, primary_key=True, index=True)
-    uuid = Column(UUID(as_uuid=True), default=generate_uuid, unique=True, index=True)
+    uuid = Column(
+        UUID(as_uuid=True),
+        server_default=func.gen_random_uuid(),  
+        default=generate_uuid,                   
+        unique=True,
+        index=True,
+        nullable=False,                          
+    )
     email = Column(String(191), nullable=False, unique=True)
     code_hash = Column(String(64), nullable=False)
     expires_at = Column(DateTime(timezone=True), nullable=False)
@@ -36,7 +43,14 @@ class TokenBlacklist(Base):
     __tablename__ = "auth_token_blacklist"
 
     id = Column(Integer, primary_key=True, index=True)
-    uuid = Column(UUID(as_uuid=True), default=generate_uuid, unique=True, index=True)
+    uuid = Column(
+        UUID(as_uuid=True),
+        server_default=func.gen_random_uuid(),  
+        default=generate_uuid,                   
+        unique=True,
+        index=True,
+        nullable=False,                          
+    )
     
     jti = Column(String(64), nullable=False, unique=True, index=True)  # JWT unique ID
     expires_at = Column(DateTime(timezone=True), nullable=False)

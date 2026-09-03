@@ -12,7 +12,14 @@ class Permission(Base):
     __tablename__ = "auth_permissions"
 
     id = Column(Integer, primary_key=True, index=True)  
-    uuid = Column(UUID(as_uuid=True), default=generate_uuid, unique=True, index=True)
+    uuid = Column(
+        UUID(as_uuid=True),
+        server_default=func.gen_random_uuid(),  
+        default=generate_uuid,                   
+        unique=True,
+        index=True,
+        nullable=False,                          
+    )
     
     module = Column(String(255), nullable=False)
     group = Column(String(255), nullable=True)
@@ -36,7 +43,14 @@ class Role(Base):
     __tablename__ = "auth_roles"
 
     id = Column(Integer, primary_key=True, index=True)  
-    uuid = Column(UUID(as_uuid=True), default=generate_uuid, unique=True, index=True)  # ← 'uuid' is unique, NOT primary
+    uuid = Column(
+        UUID(as_uuid=True),
+        server_default=func.gen_random_uuid(),  
+        default=generate_uuid,                   
+        unique=True,
+        index=True,
+        nullable=False,                          
+    )
 
     name = Column(String(191), nullable=False, unique=True)
     description = Column(String(255), nullable=True)
@@ -57,8 +71,14 @@ class RolePermission(Base):
     __tablename__ = "auth_role_permission"
 
     id = Column(Integer, primary_key=True, index=True)  
-    uuid = Column(UUID(as_uuid=True), default=generate_uuid, unique=True, index=True) 
-
+    uuid = Column(
+        UUID(as_uuid=True),
+        server_default=func.gen_random_uuid(),  
+        default=generate_uuid,                   
+        unique=True,
+        index=True,
+        nullable=False,                          
+    )
     role_id = Column(Integer, ForeignKey("auth_roles.id", ondelete="CASCADE"), nullable=False)
     permission_id = Column(Integer, ForeignKey("auth_permissions.id", ondelete="CASCADE"), nullable=False)
 

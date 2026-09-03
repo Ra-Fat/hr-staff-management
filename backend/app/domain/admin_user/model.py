@@ -14,7 +14,14 @@ class AdminUser(Base):
     __tablename__ = "auth_accounts"
 
     id = Column(Integer, primary_key= True, index= True)
-    uuid = Column(UUID(as_uuid=True), default=generate_uuid, unique=True, index=True)
+    uuid = Column(
+        UUID(as_uuid=True),
+        server_default=func.gen_random_uuid(),  
+        default=generate_uuid,                   
+        unique=True,
+        index=True,
+        nullable=False,                          
+    )
 
     email = Column(String(255), nullable=False, unique=True, index=True)
     password_hash = Column(String(255), nullable=False)

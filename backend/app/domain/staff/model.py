@@ -16,7 +16,14 @@ class Staff(Base):
     __tablename__ = "staff"
 
     id = Column(Integer, primary_key=True, index=True)
-    uuid = Column(UUID(as_uuid=True), default=generate_uuid, unique=True, index=True)
+    uuid = Column(
+        UUID(as_uuid=True),
+        server_default=func.gen_random_uuid(),  
+        default=generate_uuid,                   
+        unique=True,
+        index=True,
+        nullable=False,                          
+    )
 
     user_id = Column(Integer, ForeignKey("auth_accounts.id", ondelete="SET NULL"), nullable=True)
     department_id = Column(Integer, ForeignKey("departments.id"), nullable=True)
