@@ -55,7 +55,7 @@ class Role(Base):
     name = Column(String(191), nullable=False, unique=True)
     description = Column(String(255), nullable=True)
 
-    role_permission = relationship("RolePermission", back_populates="role", lazy="selectin", cascade="all, delete-orphan")
+    role_permissions = relationship("RolePermission", back_populates="role", lazy="selectin", cascade="all, delete-orphan")
     admin_users = relationship("AdminUser", back_populates="role_obj", lazy="noload")
 
     created_at = Column(DateTime(timezone=True), server_default=func.now(), nullable=False)
@@ -82,5 +82,5 @@ class RolePermission(Base):
     role_id = Column(Integer, ForeignKey("auth_roles.id", ondelete="CASCADE"), nullable=False)
     permission_id = Column(Integer, ForeignKey("auth_permissions.id", ondelete="CASCADE"), nullable=False)
 
-    role = relationship("Role", back_populates="role_permission", lazy="noload")
+    role = relationship("Role", back_populates="role_permissions", lazy="noload")
     permission = relationship("Permission", back_populates="role_permission", lazy="selectin")

@@ -9,6 +9,7 @@ from app.repositories.Base.base_repository import BaseRepository
 
 
 class RoleRepository(BaseRepository[Role]):
+    
     model_class = Role
 
     def __init__(self, session: AsyncSession) -> None:

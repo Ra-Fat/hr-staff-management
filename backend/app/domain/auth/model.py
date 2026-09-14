@@ -30,7 +30,6 @@ class EmailVerification(Base):
     __table_args__ = (
         Index("idx_email_verifications_email", "email"),
         UniqueConstraint("uuid"),
-        Index("idx_email_verifications_expires_at", "expires_at"),
     )
 
 

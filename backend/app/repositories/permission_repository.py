@@ -7,7 +7,7 @@ from app.domain.role.model import Permission
 from app.repositories.Base.base_repository import BaseRepository
 
 
-class PermissionRepository(BaseRepository(Permission)):
+class PermissionRepository(BaseRepository[Permission]):    
     model_class = Permission
 
     def __int__(self, session: AsyncSession) -> None:
