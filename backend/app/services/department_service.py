@@ -34,7 +34,10 @@ class DepartmentService(BaseService[DepartmentRepository]):
 
         payload = {k: v for k, v in data.model_dump().items() if v is not None}
         instance = await self.repository.create(**payload)
-        return app_success(data=self.serialize(instance))
+
+        data = self.serialize(instance)
+        data["staff_count"] = 0
+        return app_success(data=data)
 
     async def update(self, uuid: Any, data: DepartmentUpdate, not_found_msg: Optional[str] = None):
         instance = await self._get_or_raise(uuid, not_found_msg)

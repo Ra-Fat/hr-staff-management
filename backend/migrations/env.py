@@ -9,15 +9,18 @@ from sqlalchemy.ext.asyncio import async_engine_from_config
 from alembic import context
 
 from app.core.database import Base
+from dotenv import load_dotenv
 from app.domain.admin_user.model import AdminUser
 from app.domain.attendance.model import Attendance
 from app.domain.auth.model import EmailVerification, TokenBlacklist
 from app.domain.department.model import Department
 from app.domain.leave_request.model import LeaveRequest
 from app.domain.role.model import Role, RolePermission, Permission
+from app.domain.position.model import Position
 from app.domain.staff.model import Staff
 from pathlib import Path
 
+load_dotenv()
 
 def process_revision_directives(context, revision, directives):
     """Auto-generate sequential revision IDs: 001, 002, 003..."""

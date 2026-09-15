@@ -16,7 +16,8 @@ class DepartmentUpdate(BaseModel):
 class DepartmentSchema(BaseModel):
     uuid: UUID
     name: str
-    staff_count: Optional[int] = None
+    staff_count: int = 0
     created_at: Optional[datetime] = None
+    
 
     model_config = ConfigDict(from_attributes=True)

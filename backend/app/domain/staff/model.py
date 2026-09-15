@@ -27,17 +27,19 @@ class Staff(Base):
 
     user_id = Column(Integer, ForeignKey("auth_accounts.id", ondelete="SET NULL"), nullable=True)
     department_id = Column(Integer, ForeignKey("departments.id"), nullable=True)
+    position_id = Column(Integer, ForeignKey("positions.id"), nullable=True)
 
     first_name = Column(String(100), nullable=False)
     last_name = Column(String(100), nullable=False)
-    position = Column(String(100), nullable=True)
     hire_date = Column(Date, nullable=True)
     salary = Column(Numeric(12, 2), nullable=True)
+
     profile_url = Column(String(500), nullable=True)
 
     status = Column(SqlEnum(StaffStatus, name="staff_status_enum"), nullable=False, default=StaffStatus.ACTIVE)
 
     auth_account = relationship("AdminUser", back_populates="staff_profile", lazy="selectin")
+    position_obj = relationship("Position", back_populates="staff", lazy="selectin")
     department = relationship("Department", back_populates="staff", lazy="selectin")
 
     # leave_requests = relationship("LeaveRequest", back_populates="staff", lazy="noload")
@@ -51,6 +53,7 @@ class Staff(Base):
         Index("idx_staff_user_id", "user_id"),
         Index("idx_staff_department_id", "department_id"),
         Index("idx_staff_status", "status"),
+        Index("idx_staff_position_id", "position_id"),
         UniqueConstraint("uuid"),
     )
 

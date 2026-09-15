@@ -8,6 +8,7 @@ from app.core.database import get_db
 from app.core.enum import StaffStatus, StatusCode
 from app.domain.staff.schema import StaffCreate, StaffUpdate
 from app.repositories.department_repository import DepartmentRepository
+from app.repositories.position_repository import PositionRepository
 from app.repositories.staff_repository import StaffRepository
 from app.services.staff_service import StaffService
 
@@ -21,6 +22,7 @@ def get_service(db: AsyncSession = Depends(get_db)) -> StaffService:
     return StaffService(
         StaffRepository(db),
         DepartmentRepository(db),
+        PositionRepository(db),
     )
 
 @router.get("", dependencies=[Depends(require_permission("staff.list"))])
@@ -76,10 +78,3 @@ async def delete_staff(
     service: StaffService = Depends(get_service),
 ):
     return await service.delete(staff_uuid)
-
-@router.get("/me/profile", tags=["Staff Self-Service"])
-async def get_my_staff_profile(
-    current_user_id: int = Depends(get_current_user_id),
-    service: StaffService = Depends(get_service),
-):
-    return await service.get_my_profile(current_user_id)

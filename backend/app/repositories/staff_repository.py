@@ -15,6 +15,7 @@ class StaffRepository(BaseRepository[Staff]):
     def build_filters(
         self,
         search: Optional[str] = None,
+        position_id: Optional[int] = None,
         department_id: Optional[int] = None,
         status: Optional[StaffStatus] = None,
     ) -> List[ColumnElement]:
@@ -33,6 +34,8 @@ class StaffRepository(BaseRepository[Staff]):
 
         if department_id is not None:
             filters.append(Staff.department_id == department_id)
+        if position_id is not None:
+            filters.append(Staff.position_id == position_id)
         if status is not None:
             filters.append(Staff.status == status)
 

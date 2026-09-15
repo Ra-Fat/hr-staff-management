@@ -14,12 +14,17 @@ class DepartmentRefSchema(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 
 
+class PositionRefSchema(BaseModel):
+    uuid: UUID
+    title: str
+    model_config = ConfigDict(from_attributes=True)
+
 class StaffCreate(BaseModel):
     first_name: str
     last_name: str
     email: Optional[str] = None
     department_uuid: Optional[UUID] = None
-    position: Optional[str] = None
+    position_uuid: Optional[UUID] = None
     hire_date: Optional[date] = None
     profile_url: Optional[str] = None
     salary: Optional[float] = None
@@ -50,6 +55,7 @@ class StaffSchema(BaseModel):
 
 class StaffDetailSchema(StaffSchema):
     department: Optional[DepartmentRefSchema] = None
+    position: Optional[PositionRefSchema] = None
     salary: Optional[float] = None
     profile_url: Optional[str] = None
     hire_date: Optional[date] = None
