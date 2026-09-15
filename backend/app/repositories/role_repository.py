@@ -22,7 +22,7 @@ class RoleRepository(BaseRepository[Role]):
             select(Role)
             .where(match)
             .options(
-                selectinload(Role.role_permissions).selectinload(RolePermission.permission)
+                selectinload(Role.role_permission).selectinload(RolePermission.permission)
             )
         )
         return (await self.session.execute(stmt)).scalars().first()
@@ -48,7 +48,7 @@ class RoleRepository(BaseRepository[Role]):
 
     async def list_all(self) -> List[Role]:
         stmt = select(Role).options(
-            selectinload(Role.role_permissions).selectinload(RolePermission.permission)
+            selectinload(Role.role_permission).selectinload(RolePermission.permission)
         )
         return list((await self.session.execute(stmt)).scalars().all())
 

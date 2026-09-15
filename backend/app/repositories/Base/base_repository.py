@@ -38,6 +38,8 @@ class BaseRepository(Generic[ModelX]):
     async def save(self, instance: ModelX) -> ModelX:
         self.session.add(instance)
         await self.session.commit()
+        await self.session.refresh(instance)
+        return instance
 
     async def hard_delete(self, instance: ModelX) -> ModelX:
         """Use only  to remove the row permanently."""

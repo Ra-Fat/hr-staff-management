@@ -18,7 +18,7 @@ PERMISSION_DEFINITIONS: Dict[str, PermGroup] = {
             ("Update staff", "employee.staff.update"),
             ("Delete staff", "employee.staff.delete"),
         ],
-        "Department": [
+        "Departments": [
             ("List departments", "employee.department.list"),
             ("Create department", "employee.department.create"),
             ("Update department", "employee.department.update"),
@@ -74,6 +74,8 @@ PERMISSION_DEFINITIONS: Dict[str, PermGroup] = {
             ("Create admin user", "admin.user.create"),
             ("Update admin user", "admin.user.update"),
             ("Delete admin user", "admin.user.delete"),
+            ("Enable admin user", "admin_users.enable"),     
+            ("Disable admin user", "admin_users.disable"),
         ],
         "Roles": [
             ("List roles", "admin.role.list"),

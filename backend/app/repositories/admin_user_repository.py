@@ -7,7 +7,6 @@ from sqlalchemy.orm import selectinload
 
 from app.core.exceptions import ValidationError
 from app.core.lib.translate import get_translation
-from app.core.enum import AdminStatus
 from app.domain.admin_user.model import AdminUser
 from app.domain.role.model import Role, RolePermission
 from app.repositories.Base.base_repository import BaseRepository

@@ -16,38 +16,12 @@ class PermissionSchema(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 
 
-# class PermissionCreate(BaseModel):
-#     module: str
-#     name: str
-#     codename: str
-#     group: Optional[str] = None
-
-
-# class PermissionUpdate(BaseModel):
-#     module: Optional[str] = None
-#     name: Optional[str] = None
-#     codename: Optional[str] = None
-#     group: Optional[str] = None
-
-
-# class PermissionSchema(BaseModel):
-#     uuid: UUID
-#     module: str
-#     group: Optional[str] = None
-#     name: str
-#     codename: str
-
-#     model_config = ConfigDict(from_attributes=True)
-
-
-
 class RoleSchema(BaseModel):
     id: int
     uuid: UUID
     name: str
     description: Optional[str] = None
     created_at: Optional[datetime] = None
-    deleted_at: Optional[datetime] = None
     permissions: List[PermissionSchema] = []
 
     model_config = ConfigDict(from_attributes=True)

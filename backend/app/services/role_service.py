@@ -1,4 +1,5 @@
 from typing import Dict, List, Optional
+import re
 
 from app.core.exceptions import ConflictError, NotFoundError, ValidationError
 from app.core.responses import app_success
@@ -14,29 +15,50 @@ from app.core.permission import PERMISSION_DEFINITIONS
 from app.repositories.role_repository import RoleRepository
 from app.repositories.permission_repository import PermissionRepository
 
+def _normalize(name: str) -> str:
+    return re.sub(r"[\s-]+", "_", name.strip().lower())
+
+def _build_module_totals() -> Dict[str, int]:
+    """
+    Builds a lookup table of permission totals, keyed by BOTH:
+    - top-level category (e.g. "attendance", "leave")
+    - submenu name (e.g. "admin_users", "staff", "departments")
+    This handles the fact that `permission.module` in the DB is
+    inconsistent about which level it stores.
+    """
+    totals: Dict[str, int] = {}
+
+    for category, submenus in PERMISSION_DEFINITIONS.items():
+        cat_key = _normalize(category)
+        cat_total = sum(len(perms) for perms in submenus.values())
+        totals[cat_key] = totals.get(cat_key, 0) + cat_total
+
+        for submenu, perms in submenus.items():
+            sub_key = _normalize(submenu)
+            totals[sub_key] = totals.get(sub_key, 0) + len(perms)
+
+    return totals
 
 def _to_summary(role) -> RoleSummarySchema:
-    counts: Dict[str, str] = {}
-    for rp in role.role_permissions or []:
+    counts: Dict[str, int] = {}
+    for rp in role.role_permission or []:
         if rp.permission:
             mod = rp.permission.module
-            counts[mod] = counts.get(mod, 0) +1
+            counts[mod] = counts.get(mod, 0) + 1
 
-    module_totals = {
-        mod: sum(len(perms) for perms in submenus.values())
-        for mod, submenus in PERMISSION_DEFINITIONS.items()
-    }
+    module_totals = _build_module_totals()
+
     formatted = {
         mod: f"{granted}/{module_totals.get(mod, '?')}"
         for mod, granted in counts.items()
     }
     return RoleSummarySchema(
-        id= role.id,
+        id=role.id,
         uuid=role.uuid,
         name=role.name,
-        description=role.description,    
-        permission_count=len(role.role_permissions or []),            
-        permission_counts_by_module=formatted,                    
+        description=role.description,
+        permission_count=len(role.role_permission or []),
+        permission_counts_by_module=formatted,
     )
 
 

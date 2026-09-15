@@ -34,9 +34,7 @@ class LeaveRequestSchema(BaseModel):
     end_date: date
     status: LeaveStatus
     reviewed_by: Optional[UUID] = None
-    created_at: Optional[datetime] = None
-    deleted_at: Optional[datetime]
-    
+    created_at: Optional[datetime] = None    
 
     model_config = ConfigDict(from_attributes=True)
 

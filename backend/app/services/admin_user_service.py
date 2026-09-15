@@ -59,7 +59,7 @@ class AdminUserService(BaseService[AdminUserRepository]):
             email=data.email,
             password_hash=hash_password(temp_password),
             role_id=data.role_id,
-            status=AdminStatus.active,
+            status=AdminStatus.ACTIVE,
         )
 
         # Re-fetch so role_obj is eagerly loaded for serialisation.
@@ -97,14 +97,14 @@ class AdminUserService(BaseService[AdminUserRepository]):
 
     async def disable(self, uuid):
         instance = await self._get_or_raise(uuid)
-        instance.status = AdminStatus.disabled
+        instance.status = AdminStatus.DISABLED
         await self.repository.save(instance)
         instance = await self.repository.get_by_id(instance.id)
         return app_success(data=self.serialize(instance))
 
     async def enable(self, uuid):
         instance = await self._get_or_raise(uuid)
-        instance.status = AdminStatus.active
+        instance.status = AdminStatus.ACTIVE
         await self.repository.save(instance)
         instance = await self.repository.get_by_id(instance.id)
         return app_success(data=self.serialize(instance))

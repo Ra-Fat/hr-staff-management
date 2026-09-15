@@ -14,8 +14,8 @@ class StatusCode(IntEnum):
     INTERNAL_SERVER_ERROR = 500
 
 class AdminStatus(str, Enum):
-    active = "active"
-    disabled = "suspended"
+    ACTIVE = "active"
+    DISABLED = "disabled"
 
 
 class StaffStatus(str, Enum):

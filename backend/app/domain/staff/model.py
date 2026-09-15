@@ -37,11 +37,11 @@ class Staff(Base):
 
     status = Column(SqlEnum(StaffStatus, name="staff_status_enum"), nullable=False, default=StaffStatus.ACTIVE)
 
-    auth_account = relationship("AuthAccount", back_populates="staff_profile", lazy="selectin")
+    auth_account = relationship("AdminUser", back_populates="staff_profile", lazy="selectin")
     department = relationship("Department", back_populates="staff", lazy="selectin")
 
-    leave_requests = relationship("LeaveRequest", back_populates="staff", lazy="noload")
-    attendance_records = relationship("Attendance", back_populates="staff", lazy="noload")
+    # leave_requests = relationship("LeaveRequest", back_populates="staff", lazy="noload")
+    # attendance_records = relationship("Attendance", back_populates="staff", lazy="noload")
 
     created_at = Column(DateTime(timezone=True), server_default=func.now())
     updated_at = Column(DateTime(timezone=True), onupdate=func.now())

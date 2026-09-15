@@ -90,7 +90,7 @@ async def login(
     if not user or not verify_password(body.password, user.password_hash):
         raise AuthenticationError('Invalid email or password')
 
-    if user.status != AdminStatus.active:
+    if user.status != AdminStatus.ACTIVE:
         raise AuthenticationError(get_translation('account_disabled'))
 
     user.last_login = datetime.now(timezone .utc)
@@ -114,7 +114,7 @@ async def refresh(
     if not user:
         raise AuthenticationError(get_translation('user_not_found'))
 
-    if user.status != AdminStatus.active:
+    if user.status != AdminStatus.ACTIVE:
         raise AuthenticationError(get_translation('account_disabled'))
 
     return _issue(user)

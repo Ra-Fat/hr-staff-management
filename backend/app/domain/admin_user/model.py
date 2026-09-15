@@ -28,7 +28,7 @@ class AdminUser(Base):
 
     last_login = Column(DateTime(timezone=True), nullable=True)
 
-    status = Column(SqlEnum(AdminStatus, name="admin_status_enum"), nullable=False, default=AdminStatus.active)
+    status = Column(SqlEnum(AdminStatus, name="admin_status_enum"), nullable=False, default=AdminStatus.ACTIVE)
     role_id = Column(Integer, ForeignKey("auth_roles.id", ondelete="SET NULL"), nullable=True)
 
     created_at = Column(DateTime(timezone=True), server_default=func.now())
@@ -37,9 +37,11 @@ class AdminUser(Base):
     deleted_at = Column(DateTime(timezone=True), nullable=True, default=None)
 
     role_obj = relationship("Role", back_populates="admin_users", lazy="selectin")
+    staff_profile = relationship("Staff", back_populates="auth_account", uselist=False, lazy="noload")
 
     __table_args__ = (
         Index("idx_auth_accounts_email", "email"),
         UniqueConstraint("uuid"),
         Index("idx_auth_accounts_status", "status"),
     )
+    
