@@ -56,5 +56,16 @@ services:
       timeout: 5s
       retries: 5
 
+  # db_test:
+  #   image: postgres:16
+  #   environment:
+  #     POSTGRES_USER: postgres
+  #     POSTGRES_PASSWORD: postgres
+  #     POSTGRES_DB: hr_test_db
+  #   ports:
+  #     - "5434:5432"
+  #   tmpfs:
+  #     - /var/lib/postgresql/data  # in-memory, wiped on container stop — perfect for tests
+
 volumes:
   pgdata:

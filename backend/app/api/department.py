@@ -14,7 +14,7 @@ from app.repositories.department_repository import DepartmentRepository
 from app.services.department_service import DepartmentService
 
 router = APIRouter(
-    prefix="/department",
+    prefix="/admin/departments",
     tags=["Departments"],
     dependencies=[Depends(get_current_user)],
 )

@@ -1,0 +1,28 @@
+# syntax=docker/dockerfile:1
+
+# ─────────────────────────────────────────────────────────────
+# Development image: runs `next dev` with hot reload. Source is
+# bind-mounted via docker-compose.dev.yml, so only dependencies
+# are baked in here.
+# ─────────────────────────────────────────────────────────────
+
+ARG NODE_VERSION=20-alpine
+
+FROM node:${NODE_VERSION}
+WORKDIR /app
+RUN apk add --no-cache libc6-compat
+
+ENV NODE_ENV=development
+ENV NEXT_TELEMETRY_DISABLED=1
+ENV PORT=3002
+ENV HOSTNAME=0.0.0.0
+# Ensure file-watching works reliably inside the container
+ENV WATCHPACK_POLLING=true
+
+COPY package.json package-lock.json ./
+RUN npm ci
+
+COPY . .
+
+EXPOSE 3002
+CMD ["npm", "run", "dev"]

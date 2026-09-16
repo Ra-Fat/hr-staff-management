@@ -2,6 +2,7 @@ from pydantic_settings import BaseSettings
 
 class Settings(BaseSettings):
     DATABASE_URL: str
+    TEST_DATABASE_URL: str
     TEST_BASE_URL: str
     FERNET_KEY: str
 
@@ -27,6 +28,18 @@ class Settings(BaseSettings):
     SMTP_SECURITY: str = "starttls"
     EMAIL_FROM: str = "no-reply@hrsystem.local"
     EMAIL_FROM_NAME: str = "HR System"
+
+    OFFICE_LATITUDE: float
+    OFFICE_LONGITUDE: float
+    OFFICE_RADIUS_METERS: int
+
+    OFFICE_TIMEZONE: str
+
+    # Attendance windows, in office LOCAL time
+    CHECK_IN_SCHEDULE_START: str
+    CHECK_IN_SCHEDULE_END: str
+    CHECK_OUT_SCHEDULE_START: str
+    CHECK_OUT_SCHEDULE_END: str
 
     model_config = {"env_file": ".env", "env_file_encoding": "utf-8", "extra": "ignore"}
 

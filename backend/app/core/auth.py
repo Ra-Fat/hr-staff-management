@@ -2,14 +2,16 @@ import secrets
 from typing import Any, Callable, Dict, List, Optional
 from fastapi import Depends , Header
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
-
+from uuid import UUID
 from jose import JWTError
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
+from app.core.exceptions import NotFoundError
 
 from app.core.config import settings
 from app.core.database import get_db
 from app.core.exceptions import AuthenticationError, AuthorizationError
+from app.repositories.staff_repository import StaffRepository
 from app.core.lib.translate import get_translation
 from app.domain.auth.model import TokenBlacklist
 from app.core.security import verify_access_token
@@ -66,3 +68,19 @@ def require_permission(codename: str) -> Callable:
         return payload
 
     return _check
+
+
+async def get_current_staff_uuid(
+    current_user: Dict[str, Any] = Depends(get_current_user),
+    db: AsyncSession = Depends(get_db),
+) -> UUID:
+    """Resolves the logged-in auth account to their linked Staff record's uuid."""
+    user_id = current_user.get("sub")
+    if user_id is None:
+        raise AuthenticationError(get_translation("invalid_token"))
+
+    staff_repo = StaffRepository(db)
+    staff = await staff_repo.get_by_user_id(int(user_id))
+    if not staff:
+        raise NotFoundError(get_translation("staff_profile_not_found"))
+    return staff.uuid

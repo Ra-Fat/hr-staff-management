@@ -27,7 +27,9 @@ class BadRequestError(AppException):
     status_code = StatusCode.BAD_REQUEST
     code = StatusCode.BAD_REQUEST
 
-
+class ForbiddenError(AppException):
+    status_code = StatusCode.FORBIDDEN
+    
 class AuthenticationError(AppException):
     """Authentication issue."""
     status_code = StatusCode.UNAUTHORIZED

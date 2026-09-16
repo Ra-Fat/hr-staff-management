@@ -18,6 +18,7 @@ from app.domain.leave_request.model import LeaveRequest
 from app.domain.role.model import Role, RolePermission, Permission
 from app.domain.position.model import Position
 from app.domain.staff.model import Staff
+from app.domain.attendance.model import Attendance
 from pathlib import Path
 
 load_dotenv()

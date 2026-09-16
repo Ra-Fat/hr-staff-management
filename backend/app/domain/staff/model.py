@@ -43,7 +43,7 @@ class Staff(Base):
     department = relationship("Department", back_populates="staff", lazy="selectin")
 
     # leave_requests = relationship("LeaveRequest", back_populates="staff", lazy="noload")
-    # attendance_records = relationship("Attendance", back_populates="staff", lazy="noload")
+    attendance_records = relationship("Attendance", back_populates="staff", lazy="noload")
 
     created_at = Column(DateTime(timezone=True), server_default=func.now())
     updated_at = Column(DateTime(timezone=True), onupdate=func.now())

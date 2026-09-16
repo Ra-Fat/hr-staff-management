@@ -1,0 +1,27 @@
+# Development stack with hot reload.
+#   Start:  docker compose -f docker-compose.dev.yml up --build
+#   Stop:   docker compose -f docker-compose.dev.yml down
+#
+# Source is bind-mounted so edits on the host trigger `next dev`
+# recompiles. node_modules and .next live in anonymous volumes so the
+# container's own copies aren't clobbered by the host mount.
+
+services:
+  web:
+    build: 
+      context: .
+      dockerfile: Dockerfile.dev
+    image: hr-staff-management:dev
+    container_name: hr-staff-management-dev
+    ports:
+      - '${PORT:-3002}:3002'
+    env_file:
+      - .env.local
+    environment:
+      NODE_ENV: development
+      WATCHPACK_POLLING: 'true'
+    volumes:
+      - .:/app
+      - /app/node_modules
+      - /app/.next
+    command: npm run dev
