@@ -2,7 +2,7 @@ import { ApiError } from "@/src/types/api.type";
 import { logger } from "@/src/lib/logger";
 import { getAccessToken, decodeJwt } from "@/src/lib/session";
 
-const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL ?? "";
+export const BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL ?? "";
 
 interface RequestOptions extends RequestInit {
   baseUrl?: string;
@@ -82,12 +82,14 @@ async function request<T>(
 }
 
 export const httpClient = {
-  get: <T>(path: string, options?: RequestOptions) => request<T>('GET', path, options),
+  get: <T>(path: string, options?: RequestOptions) =>
+    request<T>("GET", path, options),
   post: <T>(path: string, body: unknown, options?: RequestOptions) =>
-    request<T>('POST', path, { ...options, body: JSON.stringify(body) }),
+    request<T>("POST", path, { ...options, body: JSON.stringify(body) }),
   put: <T>(path: string, body: unknown, options?: RequestOptions) =>
-    request<T>('PUT', path, { ...options, body: JSON.stringify(body) }),
+    request<T>("PUT", path, { ...options, body: JSON.stringify(body) }),
   patch: <T>(path: string, body: unknown, options?: RequestOptions) =>
-    request<T>('PATCH', path, { ...options, body: JSON.stringify(body) }),
-  delete: <T>(path: string, options?: RequestOptions) => request<T>('DELETE', path, options),
+    request<T>("PATCH", path, { ...options, body: JSON.stringify(body) }),
+  delete: <T>(path: string, options?: RequestOptions) =>
+    request<T>("DELETE", path, options),
 };

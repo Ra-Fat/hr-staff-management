@@ -1,7 +1,16 @@
 "use client";
-import { Eye, EyeOff } from "lucide-react";
-import Link from "next/link";
-import { useState } from "react";
+import {
+  decodeJwt,
+  getAccessToken,
+  isExpired,
+  saveSession,
+  userFromToken,
+} from "@/src/lib/session";
+import { authApi } from "@/src/services/auth";
+import { ApiError } from "@/src/types/api.type";
+import { Eye, EyeOff, Loader2 } from "lucide-react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useEffect, useState } from "react";
 
 export default function Login() {
   return (
@@ -34,16 +43,55 @@ export default function Login() {
 
 function LoginForm() {
   const [showPassword, setShowPassword] = useState(false);
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  // const setCurrentUser = useAppStore((s) => s.setCurrentUser);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
 
+  const searchParams = useSearchParams();
+  const router = useRouter();
 
-  // const handleSubmit = async (e: reac)
+  useEffect(() => {
+    const token = getAccessToken();
+    if (token && !isExpired(decodeJwt(token))) {
+      router.replace(searchParams.get("redirect") ?? "/dashboard");
+    }
+  }, [router, searchParams]);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError("");
+    setLoading(true);
+
+    try {
+      const tokens = await authApi.login(email, password);
+      saveSession(tokens.access_token, tokens.refresh_token);
+
+      const user = userFromToken(tokens.access_token);
+      try {
+        const profile = await authApi.me();
+        if (user) {
+          user.name = profile.full_name || user.name;
+          user.email = profile.email;
+          user.role = profile.role?.name ?? user.role;
+        }
+      } catch {}
+      // setCurrentUser(user);
+      const redirect = searchParams.get("redirect") ?? "/dashboard";
+      router.push(redirect);
+    } catch (error) {
+      const msg =
+        error instanceof ApiError
+          ? error.message
+          : "Unable to sign in. Please try again";
+      setError(msg);
+      setLoading(false);
+    }
+  };
 
   return (
-    <form className="mt-10 space-y-5">
+    <form onSubmit={handleSubmit} className="mt-10 space-y-5">
       <div className="flex flex-col gap-2">
         <label htmlFor="email" className="block text-sm font-medium">
           Email
@@ -51,6 +99,8 @@ function LoginForm() {
         <input
           id="email"
           type="email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
           autoComplete="email"
           placeholder="you@company.com"
           className="w-full h-12 px-4 rounded-xl border border-border"
@@ -64,6 +114,8 @@ function LoginForm() {
         <div className="relative">
           <input
             id="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
             type={showPassword ? "text" : "password"}
             autoComplete="current-password"
             placeholder="••••••••••"
@@ -95,10 +147,16 @@ function LoginForm() {
 
       <button
         type="submit"
+        disabled={loading}
         className="w-full h-12 bg-primary rounded-xl text-white text-md hover:bg-accent-foreground font-bold cursor-pointer"
       >
-        Log in
+        {loading ? "Signing in..." : "Log in"}
       </button>
+      {error && (
+        <div className="bg-red-50 border border-red-100 text-[#EF4444] text-sm rounded-lg px-3 py-2.5">
+          {error}
+        </div>
+      )}
     </form>
   );
 }
